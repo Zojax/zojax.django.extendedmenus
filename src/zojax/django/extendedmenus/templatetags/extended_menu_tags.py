@@ -21,6 +21,18 @@ def displayed_menu_items(menu_items, request):
         except MenuItemExtension.DoesNotExist:
             pass
         children.append(child)
+    for i, child in enumerate(children):
+        child.next = None
+        child.previous = None
+        try:
+            child.next = children[i+1]
+        except IndexError:
+            pass
+        try:
+            child.previous = children[i-1]
+        except IndexError:
+            pass
+         
     return children
 
 register.filter('displayed_menu_items', displayed_menu_items)
