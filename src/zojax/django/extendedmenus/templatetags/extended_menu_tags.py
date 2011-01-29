@@ -1,5 +1,5 @@
 from django import template
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, NoReverseMatch
 from treemenus.models import MenuItem
 import re
 from zojax.django.extendedmenus.models import MenuItemExtension
@@ -50,7 +50,10 @@ def menu_item_selected(menu_item, request):
             pass
 
     if menu_item.named_url:
-        url = reverse(menu_item.named_url)
+        try:
+            url = reverse(menu_item.named_url)
+        except NoReverseMatch:
+            url = '#'
     else:
         url = menu_item.url
 
