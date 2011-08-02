@@ -8,6 +8,7 @@ from zojax.django.extendedmenus.models import MenuItemExtension
 register = template.Library()
 
 
+@register.filter
 def displayed_menu_items(menu_items, request):
     user = request.user
     children = []
@@ -35,9 +36,8 @@ def displayed_menu_items(menu_items, request):
          
     return children
 
-register.filter('displayed_menu_items', displayed_menu_items)
 
-
+@register.filter
 def menu_item_selected(menu_item, request):
     if not isinstance(menu_item, MenuItem):
         return False
@@ -62,4 +62,16 @@ def menu_item_selected(menu_item, request):
 
     return False
 
-register.filter('menu_item_selected', menu_item_selected)
+
+@register.filter
+def menu_item_have_selected(menu_item, request):
+    if not isinstance(menu_item, MenuItem):
+        return False
+
+    for child in menu_item.children():
+        if menu_item_selected(child, request):
+            return True
+
+    return False
+    
+        
