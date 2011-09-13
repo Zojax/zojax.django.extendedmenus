@@ -73,5 +73,32 @@ def menu_item_have_selected(menu_item, request):
             return True
 
     return False
+
     
+class ReverseNamedURLNode(Node):
+    def __init__(self, named_url, parser):
+        self.named_url = named_url
+        self.parser = parser
+
+    def render(self, context):
+        from django.template import TOKEN_BLOCK, Token
         
+        resolved_named_url = self.named_url.resolve(context)
+        contents = u'url ' + resolved_named_url
+        
+        urlNode = url(self.parser, Token(token_type=TOKEN_BLOCK, contents=contents))
+        try:
+            return urlNode.render(context)
+        except NoReverseMatch:
+            return '#'
+
+
+@register.tag
+def reverse_named_url(parser, token):
+    bits = token.contents.split(' ', 2)
+    if len(bits) !=2 :
+        raise TemplateSyntaxError("'%s' takes only one argument"
+                                  " (named url)" % bits[0])
+    named_url = parser.compile_filter(bits[1])
+    
+    return ReverseNamedURLNode(named_url, parser)
