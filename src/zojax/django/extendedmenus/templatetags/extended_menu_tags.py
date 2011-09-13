@@ -87,8 +87,8 @@ class ReverseNamedURLNode(Node):
         resolved_named_url = self.named_url.resolve(context)
         contents = u'url ' + resolved_named_url
         
-        urlNode = url(self.parser, Token(token_type=TOKEN_BLOCK, contents=contents))
         try:
+            urlNode = url(self.parser, Token(token_type=TOKEN_BLOCK, contents=contents))
             return urlNode.render(context)
         except NoReverseMatch:
             return '#'
