@@ -1,6 +1,7 @@
 from django import template
 from django.core.urlresolvers import reverse, NoReverseMatch
 from treemenus.models import MenuItem
+from django.template import Node
 import re
 from zojax.django.extendedmenus.models import MenuItemExtension
 
